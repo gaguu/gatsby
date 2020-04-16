@@ -7,10 +7,10 @@ import SearchPlus from '@iconify/icons-fa/search-plus';
 import Link from '@iconify/icons-fa/link';
 import { useStaticQuery, graphql } from 'gatsby';
 import PropTypes from 'prop-types';
-import BackgroundImg from 'gatsby-background-image';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Container } from 'reactstrap';
 import ReactImageLightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+import Img from 'gatsby-image';
 
 const theme = {
   breakpoints: {
@@ -19,7 +19,7 @@ const theme = {
     lg: '992px',
     xl: '1200px',
   },
-  background: 'rgba(0, 0, 0, 0.6)',
+  background: 'rgba(0, 0, 0, 0)',
   colors: {
     primary: '#38AEEE',
   },
@@ -77,22 +77,32 @@ function Gallery({ tab, data }) {
             { key = '', image = {}, title = '', description = '', url = '' },
             i
           ) => (
-            <Card key={key} fluid={image.childImageSharp.fluid} critical={true}>
-              <Overlay>
-                <h1>{title}</h1>
-                <p>{description}</p>
-                <br />
-                <div>
-                  <div className="icon" onClick={() => clickHandler(i)}>
-                    <Icon icon={SearchPlus} />
+            <Card key={key} critical={true}>
+              <div className="cardContainer">
+                <Img
+                  fluid={image.childImageSharp.fluid}
+                  style={{
+                    height: '100px',
+                    width: '100px',
+                    borderRadius: '50%',
+                  }}
+                />
+                <Overlay>
+                  <h1>{title}</h1>
+                  <p>{description}</p>
+                  <br />
+                  <div>
+                    <div className="icon" onClick={() => clickHandler(i)}>
+                      <Icon icon={SearchPlus} />
+                    </div>
+                    <div className="icon">
+                      <a href={url} target="__blank">
+                        <Icon icon={Link} />
+                      </a>
+                    </div>
                   </div>
-                  <div className="icon">
-                    <a href={url} target="__blank">
-                      <Icon icon={Link} />
-                    </a>
-                  </div>
-                </div>
-              </Overlay>
+                </Overlay>
+              </div>
             </Card>
           )
         )}
@@ -116,7 +126,7 @@ function Portfolio({ image, pageTitle, description, projects }) {
 
   return (
     <Block className="py-5">
-      <Container>
+      <StyledContainer>
         <Row>
           <Col className="mr-auto ml-auto text-center mb-5" lg="8">
             <h2
@@ -157,7 +167,7 @@ function Portfolio({ image, pageTitle, description, projects }) {
         <br />
         <br />
         <Gallery tab={tab} data={filteredData} />
-      </Container>
+      </StyledContainer>
     </Block>
   );
 }
@@ -244,11 +254,10 @@ const Block = styled.div`
   background: ${({ theme: background }) => background};
 `;
 
-const Container = styled.div`
+const StyledContainer = styled(Container)`
   position: relative;
   z-index: 10;
   color: white;
-  padding: 0px 20px;
 `;
 
 const Tabs = styled.div`
@@ -290,7 +299,8 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 30px;
+  text-align: center;
 
   h1 {
     padding: 0px;
@@ -334,36 +344,46 @@ const Overlay = styled.div`
     color: inherit;
   }
 `;
-const Card = styled(BackgroundImg)`
-  border-radius: 0.3rem;
-  overflow: hidden;
-  height: 300px;
-  min-width: 300px;
-  width: 30%;
-  display: inline-block;
-  margin: 10px;
-  position: relative;
-  background-position: center;
-  background-size: cover;
+
+const Card = styled.div`
+  width: 33%;
+  height: 250px;
+  padding: 10px;
+  box-sizing: border-box;
+
   ${down('md')} {
-    width: 45%;
+    width: 50%;
   }
   ${down('sm')} {
     width: 100%;
     margin: 10px 0px;
   }
+  .cardContainer {
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    border-radius: 0.3rem;
+    overflow: hidden;
+    min-width: 300px;
+    display: inline-block;
+    display: flex;
+    position: relative;
+    align-items: center;
+    background: ${({ theme: { colors } }) => colors.primary};
+    justify-content: center;
 
-  &:hover {
-    ${Overlay} {
-      opacity: 1;
-      h1 {
-        transform: translateY(0px);
-      }
-      p {
-        transform: translateY(0px);
-      }
-      .icon {
-        transform: translateY(0px);
+    &:hover {
+      ${Overlay} {
+        opacity: 1;
+        h1 {
+          transform: translateY(0px);
+        }
+        p {
+          transform: translateY(0px);
+        }
+        .icon {
+          transform: translateY(0px);
+        }
       }
     }
   }
@@ -377,12 +397,9 @@ const Cards = styled.div`
     margin: 0 auto;
     padding: 0;
     border: none;
-
+    justify-content: center;
     ${down('sm')} {
       flex-direction: column;
     }
-  }
-  button {
-    box-shadow: none !important;
   }
 `;

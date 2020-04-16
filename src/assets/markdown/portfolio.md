@@ -19,28 +19,28 @@ projects:
   - description: >
 
     image: ./../img/svd.png
-    technology: React Native Development
+    technology: ReactJS
     title: SVD
     url: https://play.google.com/store/apps/details?id=com.sivasdescalzo.svd_app
 
   - description: >
 
     image: ./../img/crf.png
-    technology: React Native Development
+    technology: ReactJS
     title: CRF
     url: https://play.google.com/store/apps/details?id=com.xomodigital.crf
 
   - description: >
 
     image: ./../img/entrancer.png
-    technology: React Native Development
+    technology: Android Development
     title: Entrancer
     url: https://play.google.com/store/apps/details?id=com.bclever.entrancer
 
   - description: >
 
     image: ./../img/mediconecta.png
-    technology: React Native Development
+    technology: Android Development
     title: CRF
     url: https://play.google.com/store/apps/details?id=com.mediconecta.mediconecta1
 ---
