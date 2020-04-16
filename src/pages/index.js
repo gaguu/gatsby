@@ -9,6 +9,7 @@ import Scroll from '../components/Scroll';
 import logo from '../assets/images/logo.png';
 import Typical from 'react-typical';
 import Formulary from '../components/Formulary'
+import Portfolio from '../components/Portfolio'
 
 const IndexPage = () => (
   <Layout>
@@ -54,7 +55,6 @@ const IndexPage = () => (
         </a>
       </Scroll>
     </section>
-
     <section id="one" className="wrapper style1 special">
       <Who />
     </section>
@@ -74,6 +74,7 @@ const IndexPage = () => (
     </section>
 
     <section>
+      <Portfolio />
       <Projects />
     </section>
 
