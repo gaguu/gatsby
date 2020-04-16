@@ -220,9 +220,9 @@ export default function() {
   );
 }
 
-export const PortfolioTemplate = () => (
+export const PortfolioTemplate = props => (
   <ThemeProvider theme={{ ...theme, background: 'black' }}>
-    <Portfolio />
+    <Portfolio {...props} />
   </ThemeProvider>
 );
 
