@@ -75,7 +75,6 @@ const IndexPage = () => (
 
     <section>
       <Portfolio />
-      <Projects />
     </section>
 
     <section id="two-and-half" className="wrapper style1 special">

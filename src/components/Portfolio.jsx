@@ -1,21 +1,48 @@
 import React, { useState } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import FlipMove from 'react-flip-move';
-import Block from './utils/Block';
-// import PageTitle from './utils/PageTitle';
-// import Seperator from './utils/Seperator';
 import { down } from 'styled-breakpoints';
 import { Icon } from '@iconify/react';
-import Star from '@iconify/icons-fa/star';
 import SearchPlus from '@iconify/icons-fa/search-plus';
 import Link from '@iconify/icons-fa/link';
-import { Element } from 'react-scroll';
 import { useStaticQuery, graphql } from 'gatsby';
-import Lightbox from './Lightbox';
-import theme, { themeProvider } from './theme';
 import PropTypes from 'prop-types';
 import BackgroundImg from 'gatsby-background-image';
 import { Row, Col } from 'reactstrap';
+import ReactImageLightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
+
+const theme = {
+  breakpoints: {
+    sm: '576px',
+    md: '768px',
+    lg: '992px',
+    xl: '1200px',
+  },
+  background: 'rgba(0, 0, 0, 0.6)',
+  colors: {
+    primary: '#38AEEE',
+  },
+};
+
+function Lightbox({ images, isOpen, photoIndex, setIsOpen, setPhotoIndex }) {
+  return (
+    isOpen && (
+      <ReactImageLightbox
+        mainSrc={images[photoIndex]}
+        nextSrc={images[(photoIndex + 1) % images.length]}
+        prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+        onCloseRequest={() => setIsOpen(false)}
+        onMovePrevRequest={() =>
+          setPhotoIndex((photoIndex + images.length - 1) % images.length)
+        }
+        onMoveNextRequest={() =>
+          setPhotoIndex((photoIndex + 1) % images.length)
+        }
+      />
+    )
+  );
+}
 
 function Gallery({ tab, data }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -88,8 +115,7 @@ function Portfolio({ image, pageTitle, description, projects }) {
   }));
 
   return (
-    <Element name="portfolio">
-      {/* <Block url={image} overlay={{ color: 'black', opacity: 0, tabs }}> */}
+    <Block className="py-5">
       <Container>
         <Row>
           <Col className="mr-auto ml-auto text-center mb-5" lg="8">
@@ -111,7 +137,6 @@ function Portfolio({ image, pageTitle, description, projects }) {
             </h4>
           </Col>
         </Row>
-        {/* </Container> */}
         <Tabs>
           <Tab
             onClick={() => setTab('All')}
@@ -133,8 +158,7 @@ function Portfolio({ image, pageTitle, description, projects }) {
         <br />
         <Gallery tab={tab} data={filteredData} />
       </Container>
-      {/* </Block> */}
-    </Element>
+    </Block>
   );
 }
 
@@ -191,12 +215,16 @@ export default function() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Portfolio projects={projects} />;
+      <Portfolio projects={projects} />
     </ThemeProvider>
   );
 }
 
-export const PortfolioTemplate = themeProvider(Portfolio);
+export const PortfolioTemplate = () => (
+  <ThemeProvider theme={{ ...theme, background: 'black' }}>
+    <Portfolio />
+  </ThemeProvider>
+);
 
 // styles
 const GlobalStyle = createGlobalStyle`
@@ -209,22 +237,18 @@ const GlobalStyle = createGlobalStyle`
             z-index: 10000 !important;
         }
     }
+
 `;
-const Project = styled.div``;
+
+const Block = styled.div`
+  background: ${({ theme: background }) => background};
+`;
 
 const Container = styled.div`
   position: relative;
   z-index: 10;
   color: white;
   padding: 0px 20px;
-`;
-
-const Description = styled.div`
-  text-align: center;
-  margin-top: 20px;
-  line-height: 1.8em;
-  font-size: 15px;
-  color: ${({ theme: { colors } }) => colors && colors.white};
 `;
 
 const Tabs = styled.div`
@@ -245,8 +269,8 @@ const Tab = styled.button`
   box-shadow: none;
   border: 1px solid white;
   &.active {
-    border: 1px solid ${({ theme: { colors } }) => colors.green};
-    background: #04b962;
+    border: 1px solid ${({ theme: { colors } }) => colors.primary};
+    background: ${({ theme: { colors } }) => colors.primary};
   }
   transition: all 0.3s;
 `;
@@ -254,7 +278,6 @@ const Tab = styled.button`
 const Overlay = styled.div`
   color: white;
   opacity: 0;
-  /* transform: translateY(100px); */
   background: rgba(0, 0, 0, 0.8);
 
   transition: all 0.3s;
@@ -294,7 +317,7 @@ const Overlay = styled.div`
     display: inline-block;
     transform: translateY(50px);
     transition: all 0.4s;
-    background: #04b962;
+    background: ${({ theme: { colors } }) => colors.primary};
     color: #fff;
     height: 50px;
     line-height: 50px;
@@ -312,6 +335,8 @@ const Overlay = styled.div`
   }
 `;
 const Card = styled(BackgroundImg)`
+  border-radius: 0.3rem;
+  overflow: hidden;
   height: 300px;
   min-width: 300px;
   width: 30%;
