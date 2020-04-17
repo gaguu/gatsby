@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
-import FlipMove from 'react-flip-move';
+import { Row, Col, Container } from 'reactstrap';
+import { useStaticQuery, graphql } from 'gatsby';
 import { Icon } from '@iconify/react';
+import FlipMove from 'react-flip-move';
 import SearchPlus from '@iconify/icons-fa/search-plus';
 import Link from '@iconify/icons-fa/link';
-import { useStaticQuery, graphql } from 'gatsby';
 import PropTypes from 'prop-types';
-import { Row, Col, Container } from 'reactstrap';
 import ReactImageLightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css';
 import Img from 'gatsby-image';
+import 'react-image-lightbox/style.css';
 
 const theme = {
   background: 'rgba(0, 0, 0, 0)',
