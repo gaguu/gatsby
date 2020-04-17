@@ -15,7 +15,7 @@ collections:
   - name: 'personal'
     label: 'Personal'
     files:
-      - file: 'src/assets/markdown/portfolio.md'
+      - file: 'src/assets/content/portfolio.md'
         label: 'Portfolio Projects'
         name: 'portfolio'
         fields:
