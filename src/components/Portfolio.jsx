@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import FlipMove from 'react-flip-move';
-import { down } from 'styled-breakpoints';
 import { Icon } from '@iconify/react';
 import SearchPlus from '@iconify/icons-fa/search-plus';
 import Link from '@iconify/icons-fa/link';
@@ -13,12 +12,6 @@ import 'react-image-lightbox/style.css';
 import Img from 'gatsby-image';
 
 const theme = {
-  breakpoints: {
-    sm: '576px',
-    md: '768px',
-    lg: '992px',
-    xl: '1200px',
-  },
   background: 'rgba(0, 0, 0, 0)',
   colors: {
     primary: '#38AEEE',
@@ -62,7 +55,7 @@ function Gallery({ tab, data }) {
   }
 
   return (
-    <Cards>
+    <div>
       <GlobalStyle />
       <Lightbox
         images={images}
@@ -71,13 +64,13 @@ function Gallery({ tab, data }) {
         photoIndex={photoIndex}
         setIsOpen={setIsOpen}
       />
-      <FlipMove className="box">
+      <FlipMove className="row">
         {filteredData.map(
           (
             { key = '', image = {}, title = '', description = '', url = '' },
             i
           ) => (
-            <Card key={key} critical={true}>
+            <Card key={key} className="col col-sm-12 col-md-6 col-lg-4 my-3">
               <div className="cardContainer">
                 <Img
                   fluid={image.childImageSharp.fluid}
@@ -107,7 +100,7 @@ function Gallery({ tab, data }) {
           )
         )}
       </FlipMove>
-    </Cards>
+    </div>
   );
 }
 
@@ -346,18 +339,8 @@ const Overlay = styled.div`
 `;
 
 const Card = styled.div`
-  width: 33%;
   height: 250px;
-  padding: 10px;
   box-sizing: border-box;
-
-  ${down('md')} {
-    width: 50%;
-  }
-  ${down('sm')} {
-    width: 100%;
-    margin: 10px 0px;
-  }
   .cardContainer {
     box-sizing: border-box;
     height: 100%;
@@ -385,21 +368,6 @@ const Card = styled.div`
           transform: translateY(0px);
         }
       }
-    }
-  }
-`;
-
-const Cards = styled.div`
-  .box {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 1250px;
-    margin: 0 auto;
-    padding: 0;
-    border: none;
-    justify-content: center;
-    ${down('sm')} {
-      flex-direction: column;
     }
   }
 `;

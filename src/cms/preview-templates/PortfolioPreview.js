@@ -3,7 +3,13 @@ import PropTypes from 'prop-types'
 import { PortfolioTemplate } from '../../components/Portfolio'
 
 
+// this function for converting a normal image url
+// from the CMS api to a format which the component accepts
+// as the component works with the gatsby image plugin
+// not converting to this object throws error
+// only for components using gatby-image plugin
 function createSupportedObject(url) {
+    debugger;
     return {
         childImageSharp: {
             fluid: {
