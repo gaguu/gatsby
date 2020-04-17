@@ -12,105 +12,28 @@ import Img from 'gatsby-image';
 import 'react-image-lightbox/style.css';
 
 const theme = {
-  background: 'rgba(0, 0, 0, 0)',
+  background: 'none',
   colors: {
     primary: '#38AEEE',
   },
 };
 
-function Lightbox({ images, isOpen, photoIndex, setIsOpen, setPhotoIndex }) {
-  return (
-    isOpen && (
-      <ReactImageLightbox
-        mainSrc={images[photoIndex]}
-        nextSrc={images[(photoIndex + 1) % images.length]}
-        prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-        onCloseRequest={() => setIsOpen(false)}
-        onMovePrevRequest={() =>
-          setPhotoIndex((photoIndex + images.length - 1) % images.length)
-        }
-        onMoveNextRequest={() =>
-          setPhotoIndex((photoIndex + 1) % images.length)
-        }
-      />
-    )
-  );
-}
-
-function Gallery({ tab, data }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [photoIndex, setPhotoIndex] = useState(0);
-
-  const filteredData = data.filter(item => {
-    if (tab === 'All') return true;
-    if (tab === item.technology) return true;
-    return false;
-  });
-
-  const images = filteredData.map(item => item.image.childImageSharp.fluid.src);
-
-  function clickHandler(index) {
-    setPhotoIndex(index);
-    setIsOpen(true);
-  }
-
-  return (
-    <div>
-      <GlobalStyle />
-      <Lightbox
-        images={images}
-        isOpen={isOpen}
-        setPhotoIndex={setPhotoIndex}
-        photoIndex={photoIndex}
-        setIsOpen={setIsOpen}
-      />
-      <FlipMove className="row">
-        {filteredData.map(
-          (
-            { key = '', image = {}, title = '', description = '', url = '' },
-            i
-          ) => (
-            <Card key={key} className="col col-sm-12 col-md-6 col-lg-4 my-3">
-              <div className="cardContainer">
-                <Img
-                  fluid={image.childImageSharp.fluid}
-                  style={{
-                    height: '100px',
-                    width: '100px',
-                    borderRadius: '50%',
-                  }}
-                />
-                <Overlay>
-                  <h1>{title}</h1>
-                  <p>{description}</p>
-                  <br />
-                  <div>
-                    <div className="icon" onClick={() => clickHandler(i)}>
-                      <Icon icon={SearchPlus} />
-                    </div>
-                    <div className="icon">
-                      <a href={url} target="__blank">
-                        <Icon icon={Link} />
-                      </a>
-                    </div>
-                  </div>
-                </Overlay>
-              </div>
-            </Card>
-          )
-        )}
-      </FlipMove>
-    </div>
-  );
-}
-
-function Portfolio({ image, pageTitle, description, projects }) {
+// This is the component responsibe for rendering all the projects
+// including the heading and subheading in teh section
+function Portfolio({ projects }) {
+  // sets state for the tab
+  // The default Tab will be set to all
   const [tab, setTab] = useState('All');
 
+  // this code categorizes different technologies present in the data
+  // into an array, something like ['reactjs', 'react native' ...]
   const tabs = [
     ...new Set(projects.map(({ technology = '' }) => technology.toLowerCase())),
   ];
-
+  // Filters the data such that it has a key
+  // key is required by the react-flip-move component in order to work properly
+  // and making the technology field lowercase so it matches the format in which
+  // tabs array fields are
   const filteredData = projects.map(({ technology = '', ...item }, i) => ({
     ...item,
     key: i,
@@ -166,9 +89,6 @@ function Portfolio({ image, pageTitle, description, projects }) {
 }
 
 Portfolio.propTypes = {
-  pageTitle: PropTypes.string,
-  image: PropTypes.string,
-  description: PropTypes.string,
   projects: PropTypes.arrayOf({
     image: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     url: PropTypes.string,
@@ -179,11 +99,141 @@ Portfolio.propTypes = {
 };
 
 Portfolio.defaultProps = {
-  pageTitle: 'my portfolio',
-  image: '/img/background3',
-  description:
-    'description - to update description and title visit Index page layout collection',
   projects: [],
+};
+
+// Component responsible for handling all the transitions and rendering of cards
+// This component relies on react-flip-move package to make all this
+// animations possible
+function Gallery({ tab, data }) {
+  // State for the lightbox
+  const [isOpen, setIsOpen] = useState(false);
+  // State to track the photo to be shown in the lightbox
+  const [photoIndex, setPhotoIndex] = useState(0);
+
+  // Filters the passed in data arrray
+  // It remove the entries where the technolog doesn't match the tab value
+  const filteredData = data.filter(item => {
+    if (tab === 'All') return true;
+    if (tab === item.technology) return true;
+    return false;
+  });
+
+  // gets the url from the image object passed
+  // when querying an image from the markdown, it is a file object
+  // and passing into the transformer plugins create it as an object
+  // so in that case we need to get the src out from the
+  // so that we can pass that into our lightbox component
+  const images = filteredData.map(item => item.image.childImageSharp.fluid.src);
+
+  // when the expand button is clicked
+  // which displays the lightbox
+  // this function will be call which will set the photo index
+  // and will open the lightbox
+  function clickHandler(index) {
+    setPhotoIndex(index);
+    setIsOpen(true);
+  }
+
+  return (
+    <div>
+      <GlobalStyle />
+      <Lightbox
+        images={images}
+        isOpen={isOpen}
+        setPhotoIndex={setPhotoIndex}
+        photoIndex={photoIndex}
+        setIsOpen={setIsOpen}
+      />
+      <FlipMove className="row">
+        {filteredData.map(
+          (
+            { key = '', image = {}, title = '', description = '', url = '' },
+            i
+          ) => (
+            <Card key={key} className="col col-sm-12 col-md-6 col-lg-4 my-3">
+              <div className="cardContainer">
+                <Img
+                  fluid={image.childImageSharp.fluid}
+                  style={{
+                    height: '100px',
+                    width: '100px',
+                    borderRadius: '50%',
+                  }}
+                />
+                <Overlay>
+                  <h1>{title}</h1>
+                  <p>{description}</p>
+                  <br />
+                  <div>
+                    <div className="icon" onClick={() => clickHandler(i)}>
+                      <Icon icon={SearchPlus} />
+                    </div>
+                    <div className="icon">
+                      <a href={url} target="__blank">
+                        <Icon icon={Link} />
+                      </a>
+                    </div>
+                  </div>
+                </Overlay>
+              </div>
+            </Card>
+          )
+        )}
+      </FlipMove>
+    </div>
+  );
+}
+
+Gallery.propTypes = {
+  tab: PropTypes.string,
+  data: PropTypes.arrayOf({
+    image: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    url: PropTypes.string,
+    description: PropTypes.string,
+    title: PropTypes.string,
+    technology: PropTypes.string,
+  }),
+};
+
+Gallery.defaultProps = {
+  tab: 'All',
+  data: [],
+};
+
+function Lightbox({ images, isOpen, photoIndex, setIsOpen, setPhotoIndex }) {
+  return (
+    isOpen && (
+      <ReactImageLightbox
+        mainSrc={images[photoIndex]}
+        nextSrc={images[(photoIndex + 1) % images.length]}
+        prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+        onCloseRequest={() => setIsOpen(false)}
+        onMovePrevRequest={() =>
+          setPhotoIndex((photoIndex + images.length - 1) % images.length)
+        }
+        onMoveNextRequest={() =>
+          setPhotoIndex((photoIndex + 1) % images.length)
+        }
+      />
+    )
+  );
+}
+
+Portfolio.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.string),
+  isOpen: PropTypes.bool,
+  photoIndex: PropTypes.number,
+  setIsOpen: PropTypes.func,
+  setPhotoIndex: PropTypes.func,
+};
+
+Portfolio.defaultProps = {
+  images: [],
+  isOpen: false,
+  photoIndex: 0,
+  setIsOpen: () => {},
+  setPhotoIndex: () => {},
 };
 
 const query = graphql`
@@ -208,6 +258,9 @@ const query = graphql`
   }
 `;
 
+// the default function export
+// gets the data using useStaticQuery and calls the Portfolio component
+// passing in the required data
 export default function() {
   const data = useStaticQuery(query);
   const {
@@ -223,6 +276,9 @@ export default function() {
   );
 }
 
+// This export is used for netlify CMS preview
+// it sets up the component accordingly such that it
+// works well for the CMS preview
 export const PortfolioTemplate = props => (
   <ThemeProvider theme={{ ...theme, background: 'black' }}>
     <Portfolio {...props} />
