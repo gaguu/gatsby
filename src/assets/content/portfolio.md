@@ -18,7 +18,7 @@ projects:
 
   - description: >
 
-    image: /img/svd.png
+    image: /img/SVD.png
     technology: ReactJS
     title: SVD
     url: https://play.google.com/store/apps/details?id=com.sivasdescalzo.svd_app
@@ -39,7 +39,7 @@ projects:
 
   - description: >
 
-    image: /img/mediconecta.png
+    image: /img/tct.png
     technology: Android Development
     title: CRF
     url: https://play.google.com/store/apps/details?id=com.mediconecta.mediconecta1
