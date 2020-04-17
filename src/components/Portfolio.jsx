@@ -1,25 +1,18 @@
 import React, { useState } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
-import FlipMove from 'react-flip-move';
-import { down } from 'styled-breakpoints';
+import { Row, Col, Container } from 'reactstrap';
+import { useStaticQuery, graphql } from 'gatsby';
 import { Icon } from '@iconify/react';
+import FlipMove from 'react-flip-move';
 import SearchPlus from '@iconify/icons-fa/search-plus';
 import Link from '@iconify/icons-fa/link';
-import { useStaticQuery, graphql } from 'gatsby';
 import PropTypes from 'prop-types';
-import BackgroundImg from 'gatsby-background-image';
-import { Row, Col } from 'reactstrap';
 import ReactImageLightbox from 'react-image-lightbox';
+import Img from 'gatsby-image';
 import 'react-image-lightbox/style.css';
 
 const theme = {
-  breakpoints: {
-    sm: '576px',
-    md: '768px',
-    lg: '992px',
-    xl: '1200px',
-  },
-  background: 'rgba(0, 0, 0, 0.6)',
+  background: 'rgba(0, 0, 0, 0)',
   colors: {
     primary: '#38AEEE',
   },
@@ -62,7 +55,7 @@ function Gallery({ tab, data }) {
   }
 
   return (
-    <Cards>
+    <div>
       <GlobalStyle />
       <Lightbox
         images={images}
@@ -71,33 +64,43 @@ function Gallery({ tab, data }) {
         photoIndex={photoIndex}
         setIsOpen={setIsOpen}
       />
-      <FlipMove className="box">
+      <FlipMove className="row">
         {filteredData.map(
           (
             { key = '', image = {}, title = '', description = '', url = '' },
             i
           ) => (
-            <Card key={key} fluid={image.childImageSharp.fluid} critical={true}>
-              <Overlay>
-                <h1>{title}</h1>
-                <p>{description}</p>
-                <br />
-                <div>
-                  <div className="icon" onClick={() => clickHandler(i)}>
-                    <Icon icon={SearchPlus} />
+            <Card key={key} className="col col-sm-12 col-md-6 col-lg-4 my-3">
+              <div className="cardContainer">
+                <Img
+                  fluid={image.childImageSharp.fluid}
+                  style={{
+                    height: '100px',
+                    width: '100px',
+                    borderRadius: '50%',
+                  }}
+                />
+                <Overlay>
+                  <h1>{title}</h1>
+                  <p>{description}</p>
+                  <br />
+                  <div>
+                    <div className="icon" onClick={() => clickHandler(i)}>
+                      <Icon icon={SearchPlus} />
+                    </div>
+                    <div className="icon">
+                      <a href={url} target="__blank">
+                        <Icon icon={Link} />
+                      </a>
+                    </div>
                   </div>
-                  <div className="icon">
-                    <a href={url} target="__blank">
-                      <Icon icon={Link} />
-                    </a>
-                  </div>
-                </div>
-              </Overlay>
+                </Overlay>
+              </div>
             </Card>
           )
         )}
       </FlipMove>
-    </Cards>
+    </div>
   );
 }
 
@@ -116,7 +119,7 @@ function Portfolio({ image, pageTitle, description, projects }) {
 
   return (
     <Block className="py-5">
-      <Container>
+      <StyledContainer>
         <Row>
           <Col className="mr-auto ml-auto text-center mb-5" lg="8">
             <h2
@@ -157,7 +160,7 @@ function Portfolio({ image, pageTitle, description, projects }) {
         <br />
         <br />
         <Gallery tab={tab} data={filteredData} />
-      </Container>
+      </StyledContainer>
     </Block>
   );
 }
@@ -244,11 +247,10 @@ const Block = styled.div`
   background: ${({ theme: background }) => background};
 `;
 
-const Container = styled.div`
+const StyledContainer = styled(Container)`
   position: relative;
   z-index: 10;
   color: white;
-  padding: 0px 20px;
 `;
 
 const Tabs = styled.div`
@@ -290,7 +292,8 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 30px;
+  text-align: center;
 
   h1 {
     padding: 0px;
@@ -334,55 +337,37 @@ const Overlay = styled.div`
     color: inherit;
   }
 `;
-const Card = styled(BackgroundImg)`
-  border-radius: 0.3rem;
-  overflow: hidden;
-  height: 300px;
-  min-width: 300px;
-  width: 30%;
-  display: inline-block;
-  margin: 10px;
-  position: relative;
-  background-position: center;
-  background-size: cover;
-  ${down('md')} {
-    width: 45%;
-  }
-  ${down('sm')} {
+
+const Card = styled.div`
+  height: 250px;
+  box-sizing: border-box;
+  .cardContainer {
+    box-sizing: border-box;
+    height: 100%;
     width: 100%;
-    margin: 10px 0px;
-  }
-
-  &:hover {
-    ${Overlay} {
-      opacity: 1;
-      h1 {
-        transform: translateY(0px);
-      }
-      p {
-        transform: translateY(0px);
-      }
-      .icon {
-        transform: translateY(0px);
-      }
-    }
-  }
-`;
-
-const Cards = styled.div`
-  .box {
+    border-radius: 0.3rem;
+    overflow: hidden;
+    min-width: 300px;
+    display: inline-block;
     display: flex;
-    flex-wrap: wrap;
-    max-width: 1250px;
-    margin: 0 auto;
-    padding: 0;
-    border: none;
+    position: relative;
+    align-items: center;
+    background: ${({ theme: { colors } }) => colors.primary};
+    justify-content: center;
 
-    ${down('sm')} {
-      flex-direction: column;
+    &:hover {
+      ${Overlay} {
+        opacity: 1;
+        h1 {
+          transform: translateY(0px);
+        }
+        p {
+          transform: translateY(0px);
+        }
+        .icon {
+          transform: translateY(0px);
+        }
+      }
     }
-  }
-  button {
-    box-shadow: none !important;
   }
 `;
