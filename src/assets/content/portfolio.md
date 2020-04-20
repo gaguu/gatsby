@@ -3,7 +3,7 @@ templateKey: portfolio
 title: portfolio
 projects:
   - description: ""
-    image: /img/bclever.png
+    image: /img/figma.png
     technology: React Native Development
     title: Bclever
     url: https://play.google.com/store/apps/details?id=com.bclubber
