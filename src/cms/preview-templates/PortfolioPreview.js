@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { PortfolioTemplate } from '../../components/Portfolio'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 
 // this function for converting a normal image url
@@ -9,7 +10,7 @@ import { PortfolioTemplate } from '../../components/Portfolio'
 // not converting to this object throws error
 // only for components using gatby-image plugin
 function createSupportedObject(url) {
-    debugger;
+    // debugger;
     return {
         childImageSharp: {
             fluid: {

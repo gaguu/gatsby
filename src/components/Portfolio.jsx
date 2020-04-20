@@ -156,9 +156,9 @@ function Gallery({ tab, data }) {
                 <Img
                   fluid={image.childImageSharp.fluid}
                   style={{
-                    height: '100px',
-                    width: '100px',
-                    borderRadius: '50%',
+                    height: '100%',
+                    width: '100%',
+                    objectFit: 'contain',
                   }}
                 />
                 <Overlay>
@@ -280,7 +280,7 @@ export default function() {
 // it sets up the component accordingly such that it
 // works well for the CMS preview
 export const PortfolioTemplate = props => (
-  <ThemeProvider theme={{ ...theme, background: 'black' }}>
+  <ThemeProvider theme={{ ...theme, background: 'rgba(0,0,0,0.6)' }}>
     <Portfolio {...props} />
   </ThemeProvider>
 );
@@ -300,7 +300,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Block = styled.div`
-  background: ${({ theme: background }) => background};
+  background: ${props => props.theme.background};
 `;
 
 const StyledContainer = styled(Container)`
